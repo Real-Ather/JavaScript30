@@ -33,21 +33,13 @@ document.addEventListener("DOMContentLoaded", prepareCities);
 const input = document.querySelector(".search");
 const suggestions = document.querySelector(".suggestions");
 
-function setSuggestions(items) {
-  Array.from(suggestions.childNodes).forEach(item =>
-    suggestions.removeChild(item)
-  );
-  items.forEach(item => suggestions.appendChild(item));
-}
-
 input.addEventListener("input", function(event) {
   const inputValue = event.target.value;
   if (!inputValue.length) {
-    const help1 = document.createElement("li");
-    const help2 = document.createElement("li");
-    help1.textContent = "Filter for a city";
-    help2.textContent = "or a state";
-    setSuggestions([help1, help2]);
+    suggestions.textContent = `
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    `;
     return;
   }
 
@@ -58,31 +50,25 @@ input.addEventListener("input", function(event) {
         item.city.toLowerCase().includes(normalizedValue) ||
         item.state.toLowerCase().includes(normalizedValue)
     )
-    .map(item => {
-      const element = document.createElement("li");
-      const name = document.createElement("span");
-      const population = document.createElement("span");
-
-      name.textContent = `${item.city}, ${item.state}`;
-      population.textContent = item.population;
-
-      name.classList.add("name");
-      population.classList.add("population");
-
-      element.appendChild(name);
-      element.appendChild(population);
-
-      return element;
-    });
+    .map(
+      item => `
+      <li>
+        <span class="name">${item.city}, ${item.state}</span>
+        <span class="population">${item.population}</span>
+      </li>
+    `
+    );
 
   if (items.length) {
-    setSuggestions(items);
+    suggestions.innerHTML = items.join("\n");
     return;
   }
 
-  const noneFound = document.createElement("li");
-  noneFound.textContent = `No item matched your search of: '${inputValue}'`;
-  setSuggestions([noneFound]);
+  suggestions.innerHTML = `
+    <li>
+      No item matched your search of: '${inputValue}'
+    </li>
+  `;
 });
 </script>
   </body>
