@@ -18,28 +18,60 @@
     }
 
     // Regular
+    console.log('hello');
 
     // Interpolated
+    console.log('Hello I am a %s string!', 'test');
 
     // Styled
+    console.log('%c I am some great text', 'font-size:20px; background:red; text-shadow: 10px 10px 0 blue');
 
     // warning!
+    console.warn('OH NOO');
 
     // Error :|
+    console.error('Shit!');
 
     // Info
+    console.info('fun fact: We are all going to die');
 
     // Testing
 
+    console.assert(1 === 2, 'That is wrong');
     // clearing
+    // console.clear();
 
     // Viewing DOM Elements
+    console.log(dogs);
+    console.dir(dogs); //shows you all the elements
 
     // Grouping together
+    dogs.forEach(dog => {
+      console.group(`${dog.name}`)
+      console.log(`This is ${dog.name}`);
+      console.log(`${dog.name} is ${dog.age} years old`);
+      console.groupEnd(`${dog.name}`);
+    })
 
     // counting
+    console.count('hi');
+    console.count('hi');
+    console.count('how are you');
+    console.count('how are you');
+    console.count('hi');
+    console.count('how are you');
+    console.count('hi');
+    console.count('how are you');
+    console.count('how are you');
+    console.count('hi');
 
     // timing
+    console.time('fetching data');
+    // It's used to find out how long it takes to fetch the data.
+
+    // table
+
+    console.table(dogs);
 
   </script>
 </body>
