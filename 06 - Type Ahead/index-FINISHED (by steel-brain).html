@@ -1,92 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Type Ahead 👀</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <title>Type Ahead 👀</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+  <body>
 
-<body>
+    <form class="search-form">
+      <input type="text" class="search" placeholder="City or State">
+      <ul class="suggestions">
+        <li>Filter for a city</li>
+        <li>or a state</li>
+      </ul>
+    </form>
+    <script>
+      const endpoint =
+        "https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json";
 
-  <form class="search-form">
-    <input type="text" class="search" placeholder="City or State">
-    <ul class="suggestions">
-      <li>Filter for a city</li>
-      <li>or a state</li>
-    </ul>
-  </form>
-  <script>
-    const endpoint =
-      "https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json";
+      let cities = [];
 
-    let cities = [];
-
-    function prepareCities() {
-      fetch(endpoint)
-        .then(response => response.json())
-        .then(parsedResponse => {
-          cities = parsedResponse;
-        });
-    }
-
-    document.addEventListener("DOMContentLoaded", prepareCities);
-
-    const input = document.querySelector(".search");
-    const suggestions = document.querySelector(".suggestions");
-
-    function setSuggestions(items) {
-      Array.from(suggestions.childNodes).forEach(item =>
-        suggestions.removeChild(item)
-      );
-      items.forEach(item => suggestions.appendChild(item));
-    }
-
-    input.addEventListener("input", function(event) {
-      const inputValue = event.target.value;
-      if (!inputValue.length) {
-        const help1 = document.createElement("li");
-        const help2 = document.createElement("li");
-        help1.textContent = "Filter for a city";
-        help2.textContent = "or a state";
-        setSuggestions([help1, help2]);
-        return;
+      function prepareCities() {
+        fetch(endpoint)
+          .then(response => response.json())
+          .then(parsedResponse => {
+            cities = parsedResponse;
+          });
       }
 
-      const normalizedValue = inputValue.toLowerCase();
-      const items = cities
-        .filter(
-          item =>
-          item.city.toLowerCase().includes(normalizedValue) ||
-          item.state.toLowerCase().includes(normalizedValue)
-        )
-        .map(item => {
-          const element = document.createElement("li");
-          const name = document.createElement("span");
-          const population = document.createElement("span");
+      document.addEventListener("DOMContentLoaded", prepareCities);
 
-          name.textContent = `${item.city}, ${item.state}`;
-          population.textContent = item.population;
+      const input = document.querySelector(".search");
+      const suggestions = document.querySelector(".suggestions");
 
-          name.classList.add("name");
-          population.classList.add("population");
-
-          element.appendChild(name);
-          element.appendChild(population);
-
-          return element;
-        });
-
-      if (items.length) {
-        setSuggestions(items);
-        return;
+      function setSuggestions(items) {
+        Array.from(suggestions.childNodes).forEach(item =>
+          suggestions.removeChild(item)
+        );
+        items.forEach(item => suggestions.appendChild(item));
       }
 
-      const noneFound = document.createElement("li");
-      noneFound.textContent = `No item matched your search of: '${inputValue}'`;
-      setSuggestions([noneFound]);
-    });
-  </script>
-</body>
+      input.addEventListener("input", function(event) {
+        const inputValue = event.target.value; // or input.value
+        console.log(inputValue);
 
+        if (!inputValue.length) {
+          const help1 = document.createElement("li");
+          const help2 = document.createElement("li");
+          help1.textContent = "Filter for a city";
+          help2.textContent = "or a state";
+          setSuggestions([help1, help2]);
+          return;
+        }
+
+        const normalizedValue = inputValue.toLowerCase();
+        const items = cities
+          .filter(
+            item =>
+            item.city.toLowerCase().includes(normalizedValue) ||
+            item.state.toLowerCase().includes(normalizedValue)
+          )
+          .map(item => {
+            const element = document.createElement("li");
+            const name = document.createElement("span");
+            const population = document.createElement("span");
+
+            name.textContent = `${item.city}, ${item.state}`;
+            population.textContent = item.population;
+
+            name.classList.add("name");
+            population.classList.add("population");
+
+            element.appendChild(name);
+            element.appendChild(population);
+
+            return element;
+          });
+
+        if (items.length) {
+          setSuggestions(items);
+          return;
+        }
+
+        const noneFound = document.createElement("li");
+        noneFound.textContent = `No item matched your search of: '${inputValue}'`;
+        setSuggestions([noneFound]);
+
+      });
+    </script>
+  </body>
 </html>
